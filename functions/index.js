@@ -83,6 +83,7 @@ app.post('/login', (request, response) => {
           })
         })
       }
+      return response.sendDate(401);
     }
     return response.send(400, "No such user found.");
   }).catch((error) => {
