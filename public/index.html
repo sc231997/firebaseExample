@@ -116,7 +116,7 @@
     getUserData();
   });
 
-  function setUserData(data){
+  function setUserData(data) {
     $.ajax({
       url: '/users',
       type: 'POST',
@@ -133,23 +133,23 @@
     $.ajax({
       url: '/users',
       success: function (response) {
-        $.each(response, function(key,value){
-            let usersList = $('#usersList');
-            usersList.html(usersList.html()+`<li>${key} : ${value}</li>`); 
+        $.each(response, function (key, value) {
+          let usersList = $('#usersList');
+          usersList.html(usersList.html() + `<li>${key} : ${value}</li>`);
         })
       }
     });
   }
 
-  function clearUserList(){
+  function clearUserList() {
     $('#usersList').html('');
   }
 
-  function submit(){
+  function submit() {
     const key = $('#key').val();
     const val = $('#value').val();
-    if(key !== '' && val !== ''){
-        setUserData({[key]:val});
+    if (key !== '' && val !== '') {
+      setUserData({[key]: val});
     }
   }
 </script>
