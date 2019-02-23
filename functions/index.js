@@ -129,7 +129,9 @@ app.post('/accounts', (request, response) => {
             .then((accounts) => {
               let data = [];
               accounts.forEach((account) => {
-                data.push(account.data()['account_no']);
+                const accountData = objectToJSON(account.data());
+                delete accountData['uid']
+                data.push(accountData);
               });
               return response.send(data);
             });
