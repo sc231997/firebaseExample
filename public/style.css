@@ -1,0 +1,191 @@
+html, body {
+    margin: 0px;
+}
+
+a, .link{
+    border-color: transparent;
+    font-weight: 400;
+    color: #337ab7;
+    border-radius: 0;
+}
+
+a:hover, .link:hover{
+    border-color: transparent;
+    font-weight: 400;
+    color: #337ab7;
+    border-radius: 0;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.pageContainer {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.logoutController {
+    float: right;
+    width: 30px;
+    margin-right: 5px;
+    margin-top: 5px;
+    position: fixed;
+    z-index: 1000000;
+    right: 0px;
+    display: none;
+}
+
+.headerText {
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 10;
+}
+
+.header {
+    width: 100%;
+    min-height: 5%;
+    vertical-align: middle;
+    text-align: center;
+    font-size: larger;
+    color: #ffffff;
+    font-weight: bold;
+    background-color: #377cb4;
+}
+
+.page {
+    width: 100%;
+    height: 100%;
+    margin-top: 5%;
+    display: none;
+    font-size: small;
+    background-color: #ffffff;
+}
+
+.container {
+    width: 98%;
+    height: 100%;
+    margin-top: 5%;
+    overflow-y: auto;
+    background-color: #ffffff;
+}
+
+.loadingCircle{
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    background: #000000;
+    z-index: 1000000;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    opacity: 0.8;
+    display: none;
+}
+
+.error{
+    background-color: #ff4444;
+    color: #ffffff;
+}
+
+.loginBracket {
+    border: solid 1px #238215;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    width: 50%;
+    padding: 10px;
+    margin-left: 20%;
+}
+
+.loginbutton {
+    background-color: #238215;
+    font-weight: bold;
+    border: 0px;
+    color: #ffffff;
+    padding: 3px;
+}
+
+.button {
+    background-color: #377cb4;
+    font-weight: bold;
+    padding: 3px;
+    border: 0px;
+}
+
+.greenbutton{
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    text-decoration: none;
+    -webkit-appearance: button;
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.greenbutton:hover{
+    color: #fff;
+    background-color: #449d44;
+    border-color: #398439;
+}
+
+.footer {
+    width: 90%;
+    height: 5%;
+    vertical-align: middle;
+    text-align: center;
+    font-size: larger;
+    color: #ffffff;
+    font-weight: bold;
+    background-color: #000000;
+}
+
+.accountListControl{
+    width:  99%;
+    height:  100px;
+    margin-top: 10px;
+    border: solid 1px #238215;
+    display:none;
+    -moz-box-shadow:    3px 3px 4px 0px #888;
+    -webkit-box-shadow: 3px 3px 4px 0px #888;
+    box-shadow:         3px 3px 4px 0px #888;
+}
+
+.transactionListControl{
+    width:  95%;
+    padding: 3px;
+    height:  100px;
+    margin: 5px;
+    border: solid 1px #238215;
+    display:none;
+    -moz-box-shadow:    3px 3px 4px 0px #888;
+    -webkit-box-shadow: 3px 3px 4px 0px #888;
+    box-shadow:         3px 3px 4px 0px #888;
+}
+
+.accountNumber{
+    font-size: larger;
+    text-align: center;
+}
+
+.accountDetail{
+    padding: 3px;
+    text-align: center;
+}

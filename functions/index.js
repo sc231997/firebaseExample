@@ -65,6 +65,46 @@ function objectToJSON(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
+function updateBalance(to,from,amount){
+  return db.collection('accounts').where('account_no','==',to).get().then((toDocs)=>{
+    let toDoc;
+    toDocs.forEach((doc)=>{
+      toDoc = doc;
+    }); 
+    console.log(toDoc.id);
+    return db.collection('accounts').doc(toDoc.id).update({
+      balance: toDoc.data()['balance']+amount
+    }).then(()=>{
+      return db.collection('accounts').where('account_no','==',from).get().then((fromDocs)=>{
+        let fromDoc;
+        fromDocs.forEach((doc)=>{
+          fromDoc = doc;
+        });
+        return db.collection('accounts').doc(fromDoc.id).update({
+          balance: fromDoc.data()['balance']-amount
+        }).then((doc) => doc)
+      })
+    })
+  })
+}
+
+
+function sortByKey(array, key) {
+  return array.sort(function(a, b) {
+      var x =new Date(a[key].toDate()); var y =new Date(b[key].toDate());
+      return ((x < y) ? 1 : ((x > y) ? -1 : 0));
+  });
+}
+
+
+function changeDate(array) {
+  return array.map(function(v) {
+    v.timestamp=new Date(v.timestamp.toDate()).toDateString();
+
+    return v;
+  });
+}
+
 // Aadhar Demo APIs
 
 app.post('/login', (request, response) => {
@@ -101,11 +141,12 @@ app.post('/allAccounts', (request, response) => {
           return db.collection('accounts')
             .get()
             .then((accounts) => {
-              let data = [];
+              let data = {accounts : []};
               accounts.forEach((account) => {
-                data.push(account.data()['account_no']);
+                account = objectToJSON(account.data());
+                data.accounts.push({account_no: account.account_no});
               });
-              return response.send(data);
+              return response.send(JSON.stringify(data));
             });
         }
         return response.sendStatus(401);
@@ -145,31 +186,83 @@ app.post('/accounts', (request, response) => {
   })
 });
 
-app.post('/transaction', (request, response) => {
+app.post('/makeTransaction', (request, response) => {
   const uid = request.body['uid'];
-  const passwd = request.body['passwd'];
+  const __token = request.body['__token'];
+  const to = request.body['to']*1;
+  const from = request.body['from']*1;
+  const amount = request.body['amount']*1;
   db.collection('users').doc(uid)
     .get()
     .then((doc) => {
       if (doc.exists) {
-        let userData = JSON.stringify(doc.data());
-        userData = JSON.parse(userData);
-        if (userData['passwd'] === passwd) {
-          return db.collection('accounts').where('uid', '==', uid)
-            .get()
-            .then((accounts) => {
-              let data = [];
-              accounts.forEach((account) => {
-                data.push(account.data()['account_no']);
-              });
-              return response.send(data);
+        return verifyAuthToken(uid, __token).then((isAuth) => {
+          if (isAuth) {
+            return updateBalance(to,from,amount).then((a)=>{
+              return db.collection('transactions').add({
+                to : to,
+                from : from,
+                amount: amount,
+                timestamp: new Date()
+              }).then((docId) => {
+                return response.send(200,{transactionId: docId.id});
+              }).catch((error)=>{
+                return response.send(400,error);
+              })
             });
-        }
+          }
+          return response.sendStatus(401);
+        });
       }
       return response.send(400, "No such user found.");
     }).catch((error) => {
     console.log(error);
-  })
+  });
+});
+
+app.post('/transactionHistory', (request, response) => {
+  const uid = request.body['uid'];
+  const __token = request.body['__token'];
+  const account_no = request.body['account_no']*1;
+  db.collection('users').doc(uid)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        return verifyAuthToken(uid, __token).then((isAuth) => {
+          if (isAuth) {
+            let data = { transactions:[] };
+            let todata = []
+            return db.collection('transactions').where('to','==',account_no).get().then((toDocs)=>{
+              toDocs.forEach((toDoc)=>{
+                let d=toDoc.data();
+                d.amount +=' Credited';
+                d.account=d.from;
+                todata.push(d);
+              });
+            }).then(()=>{
+              return db.collection('transactions').where('from','==',account_no).get().then((fromDocs)=>{
+                let fromdata = []
+                fromDocs.forEach((fromDoc)=>{
+                  let d=fromDoc.data();
+                  d.amount +=' Debited';
+                  d.account=d.to;
+                  fromdata.push(d);
+                });
+                data['transactions'] = data['transactions'].concat(todata,fromdata);
+                data['transactions'] = sortByKey(data['transactions'],'timestamp');
+                data['transactions'] = changeDate(data['transactions']);
+                return response.send(data)
+              })
+            });
+            
+          }
+          return response.sendStatus(401);
+        });
+      }
+      return response.send(400, "No such user found.");
+    }).catch((error) => {
+    console.log(error);
+  });
 });
 
 exports.app = functions.https.onRequest(app);

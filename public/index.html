@@ -1,10 +1,10 @@
-<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+    <title>HOOGHLY</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
-
+    <script type="text/javascript" src="jquery-1.11.3.js"></script>
+    <script type="text/javascript" src="pageLoader.js"></script>
+    <link href="style.css" rel="stylesheet" />
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/5.8.2/firebase-app.js"></script>
     <!-- include only the Firebase features as you need -->
@@ -14,143 +14,139 @@
     <script defer src="/__/firebase/5.8.2/firebase-storage.js"></script>
     <!-- initialize the SDK after all desired features are loaded -->
     <script defer src="/__/firebase/init.js"></script>
-
-    <style media="screen">
-        body {
-            background: #ECEFF1;
-            color: rgba(0, 0, 0, 0.87);
-            font-family: Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        #message {
-            background: white;
-            max-width: 360px;
-            margin: 100px auto 16px;
-            padding: 32px 24px;
-            border-radius: 3px;
-        }
-
-        #message h2 {
-            color: #ffa100;
-            font-weight: bold;
-            font-size: 16px;
-            margin: 0 0 8px;
-        }
-
-        #message h1 {
-            font-size: 22px;
-            font-weight: 300;
-            color: rgba(0, 0, 0, 0.6);
-            margin: 0 0 16px;
-        }
-
-        #message p {
-            line-height: 140%;
-            margin: 16px 0 24px;
-            font-size: 14px;
-        }
-
-        #message a {
-            display: block;
-            text-align: center;
-            background: #039be5;
-            text-transform: uppercase;
-            text-decoration: none;
-            color: white;
-            padding: 16px;
-            border-radius: 4px;
-        }
-
-        #message, #message a {
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-        }
-
-        #load {
-            color: rgba(0, 0, 0, 0.4);
-            text-align: center;
-            font-size: 13px;
-        }
-
-        @media (max-width: 600px) {
-            body, #message {
-                margin-top: 0;
-                background: white;
-                box-shadow: none;
-            }
-
-            body {
-                border-top: 16px solid #ffa100;
-            }
-        }
-    </style>
-
-    <!--------------------Bootstrap------------------->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
 </head>
+
 <body>
-<div class="container" style="padding-top: 100px">
-    <div class="card">
-        <div class="card-body">
-            <div class="card-title">Form</div>
-            <div class="form-group">
-                <label for="key">Key :</label>
-                <input type="text" class="form-control" id="key">
+    <div class="pageContainer">
+        <!--HEADER-->
+        <div class="header">
+            <div class="logoutController">
+                <a href="#" onclick=" return hooghlyBehavior.logout();">
+                    <img src="Images/logout.png" height="25px" /></a>
             </div>
-            <div class="form-group">
-                <label for="value">Value :</label>
-                <input type="text" class="form-control" id="value">
+            <div class="headerText">
+                HOOGHLY
             </div>
-            <button type="button" class="btn btn-primary" onclick="submit()">Submit</button>
+            <div class="error" id="error" style="display: none;" height="28px"></div>
+        </div>
+
+        <img class="loadingCircle" src="Images/loadingCircle.gif">
+
+        <!--PAGES-->
+        <!--Page 1 - Login-->
+        <div class="page" id="loginPage">
+            <table cellpadding="10" style="width: 100%;">
+                <tr>
+                    <th style="color: #238215">L O G I N</th>
+                </tr>
+            </table>
+            <table cellpadding="10" class="loginBracket">
+                <tr>
+                    <th>
+                        <input type="text" name="userId" placeholder="ADHAR - ID" value="1111-2222-3333" />
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <input type="password" name="password" placeholder=" PASSWORD" value="123" />
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <button type="button" class="greenbutton" action="login" style="width: 100%;">LOGIN</button>
+                    </th>
+                </tr>
+            </table>
+        </div>
+
+        <!--Page 2 - HOME-->
+        <div class="page" id="homePage">
+            <div class="container" id="accountContainer">
+                <div class="accountListControl" id="accountListControl">
+                    <table style="width: 100%; height: 100%;">
+                        <tr>
+                            <th>Account</th>
+                            <td class="needValue accountDetail" id="accountNumber" mapto="account_no"></td>
+                        </tr>
+                        <tr>
+                            <th>Balance</th>
+                            <td class="needValue accountDetail" id="accountBalance" mapto="balance">₹</td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <div class="link" onclick="hooghlyBehavior.loadHistory(this);">HISTORY</div>
+                            </th>
+                            <th>
+                                <div class="link" onclick="hooghlyBehavior.loadMakePaymentPage(this);">
+                                    <input class="greenbutton" type="button" value="MAKE PAYMENT">
+                                </div>
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--Page 3 - MAKE PAYMENT-->
+        <div class="page" id="makePayment">
+            <table style="width: 100%; height: 100%;">
+                <tr>
+                    <th>FROM</th>
+                    <td style="text-align: center" mapto="fromAccount" id="fromAccount"></td>
+                </tr>
+                <tr>
+                    <th>Balance</th>
+                    <td style="text-align: center" id="fromAccountBalance">₹</td>
+                </tr>
+                <tr>
+                    <th>Balance</th>
+                    <td style="text-align: center">₹
+                        <input type="text" id="fromAmountToTransfer" value="0"></td>
+                </tr>
+                <tr>
+                    <th>TO</th>
+                    <td style="text-align: center">
+                        <select id="SendToAccountList">
+                            <option id="SendToAccountListItem" class="needValue" mapto="account_no" style="display: none"></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="link" onclick="hooghlyBehavior.moveBack('home');">Back</th>
+                    <th class="link" onclick="hooghlyBehavior.makeTransaction();">
+                        <input class="greenbutton" type="button" value="CONFIRM PAYMENT">
+                    </th>
+                </tr>
+            </table>
+        </div>
+
+
+        <!-- Page 4 History -->
+        <div class="page" id="transactionHistory">
+            <div class="link" onclick="hooghlyBehavior.moveBack('home');">&nbsp; &lt; Back</div>
+            <div class="container" id="transactionContainer">
+                <div class="transactionListControl" id="transactionListControl">
+                    <table style="width: 100%; height: 100%;">
+                        <tr>
+                            <th>Account No.</th>
+                            <td class="needValue accountDetail" id="accountDebit" mapto="account"></td>
+                        </tr>
+                        <tr>
+                            <th>Transaction Amt.</th>
+                            <td class="needValue accountDetail" id="accountCredit" mapto="amount">₹</td>
+                        </tr>
+                        <tr>
+                            <th>Date</th>
+                            <td class="needValue accountDetail" id="accountTimeStamp" mapto="timestamp"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--FOOTER-->
+        <div class="footer">
         </div>
     </div>
-    <ul id="usersList"></ul>
-</div>
 </body>
-<script>
-  $(document).ready(function () {
-    console.log("ready!");
-    getUserData();
-  });
-
-  function setUserData(data) {
-    $.ajax({
-      url: '/users',
-      type: 'POST',
-      data: data,
-      success: function (response) {
-        console.log(response);
-        clearUserList();
-        getUserData();
-      }
-    });
-  }
-
-  function getUserData() {
-    $.ajax({
-      url: '/users',
-      success: function (response) {
-        $.each(response, function (key, value) {
-          let usersList = $('#usersList');
-          usersList.html(usersList.html() + `<li>${key} : ${value}</li>`);
-        })
-      }
-    });
-  }
-
-  function clearUserList() {
-    $('#usersList').html('');
-  }
-
-  function submit() {
-    const key = $('#key').val();
-    const val = $('#value').val();
-    if (key !== '' && val !== '') {
-      setUserData({[key]: val});
-    }
-  }
-</script>
 </html>
